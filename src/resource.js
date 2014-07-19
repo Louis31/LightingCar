@@ -1,26 +1,5 @@
-var  res ={
-		   s_CloseNormal :"res/CloseNormal.png",
-		   s_CloseSelected : "res/CloseSelected.png",
-		   s_flare:"res/flare.png",
-		   s_bg_start:"res/background.png",
-		   s_btn_start_nor:"res/btn/btnStartGameNor.png",
-		   s_btn_start_down:"res/btn/btnStartGameDown.png",
-		   sc_05:"res/sc_05.png",
-			sc_07:"res/sc_07.png",
-			sc_10:"res/sc_10.png",
-			sc_14:"res/sc_14.png",
-			sc_20:"res/sc_20.png",
-			sc_22:"res/sc_22.png",
-			sc_27:"res/sc_27.png",
-			sc_30:"res/sc_30.png",
-			sc_32:"res/sc_32.png",
-			sc_34:"res/sc_34.png",
-			sc_37:"res/sc_37.png",
-			sc_40:"res/sc_40.png",
-			menu:"res/menu.png",
-			
-		 font_arial:"res/arial-14.fnt",
- bgMusic_mp3 : 'res/Music/bgMusic.mp3',
+var res = {
+    bgMusic_mp3 : 'res/Music/bgMusic.mp3',
     bgMusic_ogg : 'res/Music/bgMusic.ogg',
     buttonEffet_mp3 : 'res/Music/buttonEffet.mp3',
     buttonEffet_ogg : 'res/Music/buttonEffet.ogg',
@@ -32,36 +11,82 @@ var  res ={
     mainMainMusic_ogg : 'res/Music/mainMainMusic.ogg',
     shipDestroyEffect_mp3 : 'res/Music/shipDestroyEffect.mp3',
     shipDestroyEffect_ogg : 'res/Music/shipDestroyEffect.ogg',
-			}
-			
-			
-			
-			
-			
-			
+    arial_14_fnt : 'res/arial-14.fnt',
+    arial_14_png : 'res/arial-14.png',
+    b01_plist : 'res/b01.plist',
+    b01_png : 'res/b01.png',
+    cocos2d_html5_png : 'res/cocos2d-html5.png',
+    explode_plist : 'res/explode.plist',              //unused
+    explosion_plist : 'res/explosion.plist',
+    explosion_png : 'res/explosion.png',
+    flare_jpg : 'res/flare.jpg',
+    gameOver_png : 'res/gameOver.png',
+    level01_tmx : 'res/level01.tmx',
+    loading_png : 'res/loading.png',
+    logo_png : 'res/logo.png',
+    menu_png : 'res/menu.png',
+    menuTitle_png : 'res/menuTitle.png',
+    textureOpaquePack_plist : 'res/textureOpaquePack.plist',
+    textureOpaquePack_png : 'res/textureOpaquePack.png',
+    textureTransparentPack_plist : 'res/textureTransparentPack.plist',
+    textureTransparentPack_png : 'res/textureTransparentPack.png',
+	
+	
+	
+	//we news
+	 source_plist:"res/source.plist",
+  source_png:"res/source.png"
 
-var resource = [
-res.s_bg_start,
-res.s_btn_start_nor,
-res.s_btn_start_down,
-res.s_flare,
-res.menu,
-res.font_arial,
+ 
+	
+	
+};
 
+var g_mainmenu = [
+    {src:res.loading_png},
+    {src:res.flare_jpg},
+    {src:res.menu_png},
+    {src:res.logo_png},
+	{src:res.b01_png},
+    {src:res.b01_plist},
+    {src:res.mainMainMusic_mp3},
+    {src:res.mainMainMusic_ogg},
+    {src:res.menuTitle_png},
+    {src:res.textureTransparentPack_plist},
+    {src:res.textureTransparentPack_png},
+	{src:res.source_plist},
+	{src:res.source_png}
+];
 
+var g_maingame = [
+    //image
+    {src:res.cocos2d_html5_png},
+    {src:res.gameOver_png},
+    {src:res.arial_14_png},
+    {src:res.explosion_png},
+    {src:res.textureOpaquePack_png},
 
-    res.s_CloseNormal,
-    res.s_CloseSelected,
-	res.sc_05,
-	res.sc_07,
-	res.sc_10,
-	res.sc_14,
-	res.sc_20,
-	res.sc_22,
-	res.sc_27,
-	res.sc_30,
-	res.sc_32,
-	res.sc_34,
-	res.sc_37,
-	res.sc_40
+    //tmx
+    //{src:res.level01_tmx},
+
+    //plist
+    {src:res.explosion_plist},
+    {src:res.textureOpaquePack_plist},
+
+    //music
+    {src:res.bgMusic_mp3},
+    {src:res.bgMusic_ogg},
+
+    //effect
+    {src:res.buttonEffet_mp3},
+    {src:res.explodeEffect_mp3},
+    {src:res.fireEffect_mp3},
+    {src:res.shipDestroyEffect_mp3},
+    {src:res.buttonEffet_ogg},
+    {src:res.explodeEffect_ogg},
+    {src:res.fireEffect_ogg},
+    {src:res.shipDestroyEffect_ogg},
+
+    // FNT
+    {src:res.arial_14_fnt}
 ];

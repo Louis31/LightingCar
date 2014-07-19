@@ -1,4 +1,5 @@
 
+MW.About="3+1 workStudio 工作室出品 \n 主程：曾铭（Louis zeng） \n 主程：黄浩（Mr.Yellow） \n 主设：高守恒"
 MW.GAME_STATE = {
     HOME:0,
     PLAY:1,
@@ -12,8 +13,7 @@ MW.KEYS = [];
 MW.LEVEL = {
     STAGE1:1,
     STAGE2:2,
-    STAGE3:3,
-	 STAGE3:3
+    STAGE3:3
 };
 
 //life
