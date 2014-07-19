@@ -1,5 +1,5 @@
 
-
+//游戏开始场景
 var gameStart = cc.Scene.extend({
     onEnter:function () {
         this._super();

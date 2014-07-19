@@ -19,8 +19,8 @@ var  res ={
 			sc_40:"res/sc_40.png",
 			menu:"res/menu.png",
 			
-			
-			 bgMusic_mp3 : 'res/Music/bgMusic.mp3',
+		 font_arial:"res/arial-14.fnt",
+ bgMusic_mp3 : 'res/Music/bgMusic.mp3',
     bgMusic_ogg : 'res/Music/bgMusic.ogg',
     buttonEffet_mp3 : 'res/Music/buttonEffet.mp3',
     buttonEffet_ogg : 'res/Music/buttonEffet.ogg',
@@ -46,6 +46,7 @@ res.s_btn_start_nor,
 res.s_btn_start_down,
 res.s_flare,
 res.menu,
+res.font_arial,
 
 
 

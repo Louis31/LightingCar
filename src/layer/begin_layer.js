@@ -13,7 +13,7 @@
         this._super();
 		
          size = cc.Director.getInstance().getWinSize();
-
+MW.size = size;
        var newGameNormal = cc.Sprite.create(res.menu, cc.rect(0, 0, 126, 33));
          var newGameSelected = cc.Sprite.create(res.menu, cc.rect(0, 33, 126, 33));
          var newGameDisabled = cc.Sprite.create(res.menu, cc.rect(0, 33 * 2, 126, 33));
@@ -79,7 +79,7 @@
 	onNewGame:function(){
 	  cc.LoaderScene.preload([], function () {
             var scene = cc.Scene.create();
-			
+			 scene.addChild(scorelayer.create());
             
             cc.Director.getInstance().replaceScene(cc.TransitionFade.create(1.2, scene));
         }, this);

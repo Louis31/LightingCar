@@ -15,9 +15,9 @@ var gamebglayer = cc.Layer.extend({
             /*if ('touches' in sys.capabilities)*/
                 this.setTouchEnabled(true);
 
-	 }
+	 },
     init:function () {
-
+       size =WM.size;
       
 	    hero = cc.Sprite.create(res.sc_27);
 		hero.setAnchorPoint(0.5, 0.5);

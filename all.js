@@ -18,7 +18,7 @@
 			'src/layer/begin_layer.js',
 			'src/layer/gamebg_layer.js',
 			'src/Effect/flareEffect.js',
-				'src/layer/
+		 	'src/layer/score_Layer.js'
         ]
     };
 
