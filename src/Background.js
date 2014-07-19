@@ -43,10 +43,14 @@ BackSky.preSet = function () {
 };
 
 var BackTileMapLvl1 = [
-        "lvl1_map1.png",
-        "lvl1_map2.png",
-        "lvl1_map3.png",
-        "lvl1_map4.png"
+        "sc_10.png",
+        "sc_10.png",
+        "sc_10.png",
+        "sc_10.png",
+		 "sc_10.png",
+        "sc_10.png",
+        "sc_10.png",
+        "sc_10.png"
 ];
 
 var BackTileMap = cc.Sprite.extend({
@@ -55,6 +59,7 @@ var BackTileMap = cc.Sprite.extend({
         this._super();
         this.initWithSpriteFrameName(frameName);
         this.setAnchorPoint(0.5, 0);
+		this.setScale(0.2);
     },
     destroy:function () {
         this.setVisible(false);

@@ -11,7 +11,7 @@ MAX_CONTAINT_HEIGHT = 40;
 
 var g_sharedGameLayer;
 
-var GameLayer = cc.Layer.extend({
+var GameLayer = cc.LayerColor.extend({
     _time:null,
     _ship:null,
     _backSky:null,
@@ -33,10 +33,12 @@ var GameLayer = cc.Layer.extend({
     init:function () {
         var bRet = false;
         if (this._super()) {
-
+		
+		/**背景颜色*/
+			this.setColor(cc.c4b(192,192,192,255));
             cc.SpriteFrameCache.getInstance().addSpriteFrames(res.textureOpaquePack_plist);
             cc.SpriteFrameCache.getInstance().addSpriteFrames(res.b01_plist);
-
+	
             // reset global values
             MW.CONTAINER.ENEMIES = [];
             MW.CONTAINER.ENEMY_BULLETS = [];
@@ -49,7 +51,7 @@ var GameLayer = cc.Layer.extend({
             MW.ACTIVE_ENEMIES = 0;
 
             MW.SCORE = 0;
-            MW.LIFE = 4;
+            MW.LIFE = 1;
             this._state = STATE_PLAYING;
 
             // OpaqueBatch
@@ -63,7 +65,9 @@ var GameLayer = cc.Layer.extend({
             this._texTransparentBatch = cc.SpriteBatchNode.createWithTexture(texTransparent);
             this.addChild(this._texTransparentBatch);
 
-            winSize = cc.Director.getInstance().getWinSize();
+              winSize = cc.Director.getInstance().getWinSize();
+			
+				 
             this._levelManager = new LevelManager(this);
 
             this.screenRect = cc.rect(0, 0, winSize.width, winSize.height + 10);
@@ -75,13 +79,13 @@ var GameLayer = cc.Layer.extend({
             this.addChild(this.lbScore, 1000);
             this.lbScore.setPosition(winSize.width - 5, winSize.height - 30);
 
-            // ship life
-            var life = cc.Sprite.createWithSpriteFrameName("ship01.png");
-            life.setScale(0.6);
+            // car level
+            var life = cc.Sprite.createWithSpriteFrameName("sc_30.png");
+            life.setScale(0.1);
             life.setPosition(30, 460);
             this._texTransparentBatch.addChild(life, 1, 5);
 
-            // ship Life count
+            // ship level count
             this._lbLife = cc.LabelTTF.create("0", "Arial", 20);
             this._lbLife.setPosition(60, 463);
             this._lbLife.setColor(cc.c3b(255, 0, 0));
@@ -130,8 +134,9 @@ var GameLayer = cc.Layer.extend({
             HitEffect.preSet();
             SparkEffect.preSet();
             Explosion.preSet();
-            BackSky.preSet();
+            //BackSky.preSet();
             BackTileMap.preSet();
+			
 
             this.initBackground();
         }
@@ -152,7 +157,7 @@ var GameLayer = cc.Layer.extend({
     onMouseDragged:function (event) {
         this.processEvent(event);
     },
-
+//触控 
     processEvent:function (event) {
         if (this._state == STATE_PLAYING) {
             var delta = event.getDelta();
@@ -177,7 +182,7 @@ var GameLayer = cc.Layer.extend({
             this.removeInactiveUnit(dt);
             this.checkIsReborn();
             this.updateUI();
-            this._movingBackground(dt);
+           // this._movingBackground(dt);
         }
     },
     checkIsCollide:function () {
@@ -260,8 +265,8 @@ var GameLayer = cc.Layer.extend({
         return cc.rectIntersectsRect(aRect, bRect);
     },
     initBackground:function () {
-        this._backSky = BackSky.getOrCreate();
-        this._backSkyHeight = this._backSky.getContentSize().height;
+       // this._backSky = BackSky.getOrCreate();
+       // this._backSkyHeight = this._backSky.getContentSize().height;
 
         this.moveTileMap();
         this.schedule(this.moveTileMap, 5);
@@ -269,7 +274,7 @@ var GameLayer = cc.Layer.extend({
     moveTileMap:function () {
         var backTileMap = BackTileMap.getOrCreate();
         var ran = Math.random();
-        backTileMap.setPosition(ran * 320, winSize.height);
+        backTileMap.setPosition(winSize.width/2, winSize.height);
         var move = cc.MoveBy.create(ran * 2 + 10, cc.p(0, -winSize.height-240));
         var fun =cc.CallFunc.create(function(){
             backTileMap.destroy();
