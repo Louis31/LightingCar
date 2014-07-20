@@ -1,5 +1,17 @@
 
 MW.About="3+1 WorkStudio 工作室出品 \n 主程：曾铭（Louis zeng） \n 主程：黄浩（Mr.Yellow） \n 主设：高守恒"
+MW.SPRITESCAlE =0.2;
+MW.SPRITEHEIGHT =10;
+MW.LEFT=20;
+MW.RIGHT= 20;
+
+MW.SPRITORDER= 1000;
+
+MW.COLOUMCOUNT =4;
+
+
+MW.ENEMYWIDTH =30;
+
 MW.GAME_STATE = {
     HOME:0,
     PLAY:1,
@@ -23,7 +35,7 @@ MW.LIFE = 4;
 MW.SCORE=10000;
 
 //sound
-MW.SOUND = false;
+MW.SOUND = true;
 
 //enemy move type
 MW.ENEMY_MOVE_TYPE = {

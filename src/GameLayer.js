@@ -34,27 +34,17 @@ var GameLayer = cc.LayerColor.extend({
         if (this._super()) {
 			winSize = cc.Director.getInstance().getWinSize();
 		
-		/**背景颜色*/
+				/**背景颜色*/
 			this.setColor(cc.c4b(192,192,192,255));
-          //  cc.SpriteFrameCache.getInstance().addSpriteFrames(res.textureOpaquePack_plist);
-          cc.SpriteFrameCache.getInstance().addSpriteFrames(res.b01_plist);
-	
-            // reset global values
-            MW.CONTAINER.ENEMIES = [];
-            MW.CONTAINER.ENEMY_BULLETS = [];
-            MW.CONTAINER.PLAYER_BULLETS = [];
-            MW.CONTAINER.EXPLOSIONS = [];
-            MW.CONTAINER.SPARKS = [];
-            MW.CONTAINER.HITS = [];
+			EnemyCache = [];
+
             MW.CONTAINER.BACKSKYS = [];
             MW.CONTAINER.BACKTILEMAPS = [];
             MW.ACTIVE_ENEMIES = 0;
 
-            MW.SCORE = 10000000000;
+            MW.SCORE = 0;
             MW.LEVEL = 0;
             this._state = STATE_PLAYING;
-
-            // _texBatch
             var texOpaque = cc.TextureCache.getInstance();
             this._texBatch = cc.SpriteBatchNode.createWithTexture(texOpaque);
             this._texBatch.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
@@ -78,17 +68,18 @@ var GameLayer = cc.LayerColor.extend({
             this.lbScore = cc.LabelBMFont.create("0", res.arial_14_fnt);
             this.lbScore.setAnchorPoint(1, 0);
             this.lbScore.setAlignment(cc.TEXT_ALIGNMENT_RIGHT);
-           
-			
             this.lbScore.setPosition(winSize.width - 5, winSize.height - 30);
 			this.addChild(this.lbScore, 1000);
+			
+			
             // car level
 			this._shipLevel = new Ship();
 			this._shipLevel.action =false;
             this._shipLevel.setScale(0.1);
             this._shipLevel.setPosition(30, 460);
             this._spriteBatch.addChild(this._shipLevel, 1, 5);
-
+			
+			
             // ship level 
             this._lableLevel = cc.LabelTTF.create("0", "Arial", 20);
             this._lableLevel.setPosition(60, 463);
@@ -97,8 +88,6 @@ var GameLayer = cc.LayerColor.extend({
 			this.addChild(this._lableLevel, 1000);
             this._ship = new Ship();
             this._spriteBatch.addChild(this._ship, this._ship.zOrder, MW.UNIT_TAG.PLAYER);
-
-          
             if (sys.capabilities.hasOwnProperty('keyboard'))
                 this.setKeyboardEnabled(true);
 
@@ -110,40 +99,33 @@ var GameLayer = cc.LayerColor.extend({
             /*if ('touches' in sys.capabilities)*/
                 this.setTouchEnabled(true);
 
-            // schedule
-
-
             if (MW.SOUND) {
                 cc.AudioEngine.getInstance().playMusic(res.bgMusic_mp3, true);
             }
 
             bRet = true;
-
             g_sharedGameLayer = this;
-
-            //pre set
-          //  Bullet.preSet();
-            Enemy.preSet();
-           // HitEffect.preSet();
-            //SparkEffect.preSet();
-            //Explosion.preSet();
-            //BackSky.preSet();
-          //  BackTileMap.preSet();
-			//cc.log(MW.SCORE);
-			
-     this.scheduleUpdate();
-            this.schedule(this.scoreCounter, 100);
-
-            this.initBackground();
+			this.scheduleUpdate();
+			this.schedule(this.scoreCounter,1/100);
+			this.schedule(this.updateEmeny,2);
         }
         return bRet;
     },
 
     scoreCounter:function () {
+
         if (this._state == STATE_PLAYING) {
-            this._time++;
-			
-            //this._levelManager.loadLevelResource(this._time);
+           
+			this._tmpScore +=10;
+	
+		if(this._tmpScore%1000===0 &&MW.LEVEL < LEVEL.LEVELMAX+1)
+		{
+			MW.LEVEL +=1;
+			this._ship.updateByLevel(MW.LEVEL);
+			this._shipLevel.updateByLevel(MW.LEVEL);
+		}
+        this._lableLevel.setString(MW.LEVEL + '');
+        this.lbScore.setString("" + this._tmpScore);
         }
     },
 
@@ -154,7 +136,7 @@ var GameLayer = cc.LayerColor.extend({
     onMouseDragged:function (event) {
         this.processEvent(event);
     },
-//触控 
+//触控
     processEvent:function (event) {
         if (this._state == STATE_PLAYING) {
             var delta = event.getDelta();
@@ -172,53 +154,41 @@ var GameLayer = cc.LayerColor.extend({
     onKeyUp:function (e) {
         MW.KEYS[e] = false;
     },
+	updateEmeny:function(){
+			for(var i =0 ; i < MW.COLOUMCOUNT ; i++){
+			var emeny =  Enemy.create({pointYIndex:i,index:i});	
+			}
+
+	},
 
     update:function (dt) {
 
         if (this._state == STATE_PLAYING) {
-           // this.checkIsCollide();
-          this.updateEmeny();
+       
             this.updateUI();
-           // this._movingBackground(dt);
+          
         }
     },
-	updateEmeny:function(){
 	
-	//Enemy.getOrCreateEnemy(1);
-	},
     checkIsCollide:function () {
-        var selChild, bulletChild;
-        // check collide
-        var i, locShip =this._ship;
-        for (i = 0; i < MW.CONTAINER.ENEMIES.length; i++) {
-            selChild = MW.CONTAINER.ENEMIES[i];
+	
+		var locShip =  this._ship ;
+        for (i = 0; i < EnemyCache.length; i++) {
+            selChild = EnemyCache[i];
             if (!selChild.active)
                 continue;
 
-            for (var j = 0; j < MW.CONTAINER.PLAYER_BULLETS.length; j++) {
-                bulletChild = MW.CONTAINER.PLAYER_BULLETS[j];
-                if (bulletChild.active && this.collide(selChild, bulletChild)) {
-                    bulletChild.hurt();
-                    selChild.hurt();
-                }
-            }
+         
             if (this.collide(selChild, locShip)) {
                 if (locShip.active) {
-                    selChild.hurt();
+                   // selChild.hurt();
+				   cc.log("挂了亲")
                     locShip.hurt();
                 }
             }
         }
 
-        for (i = 0; i < MW.CONTAINER.ENEMY_BULLETS.length; i++) {
-            selChild = MW.CONTAINER.ENEMY_BULLETS[i];
-            if (selChild.active && this.collide(selChild, locShip)) {
-                if (locShip.active) {
-                    selChild.hurt();
-                    locShip.hurt();
-                }
-            }
-        }
+
     },
     removeInactiveUnit:function (dt) {
         var selChild, children = this._texOpaqueBatch.getChildren();
@@ -250,13 +220,7 @@ var GameLayer = cc.LayerColor.extend({
     },
     updateUI:function () {
 	
-     this._tmpScore +=10;
-	 
-	if(this._tmpScore%1000===0){
-	MW.LEVEL +=1;
-	}
-        this._lableLevel.setString(MW.LEVEL + '');
-        this.lbScore.setString("" + this._tmpScore);
+    
     },
     collide:function (a, b) {
         var pos1 = a.getPosition();
@@ -339,22 +303,7 @@ GameLayer.scene = function () {
     return scene;
 };
 
-GameLayer.prototype.addEnemy = function (enemy, z, tag) {
-    this._emenyBatch.addChild(enemy, z, tag);
+GameLayer.prototype.addEnemy = function (enemy, z,tag) {
+    this._spriteBatch.addChild(enemy, z);
 };
 
-GameLayer.prototype.addExplosions = function (explosion) {
-    this._explosions.addChild(explosion);
-};
-
-GameLayer.prototype.addBulletHits = function (hit, zOrder) {
-    this._texOpaqueBatch.addChild(hit, zOrder);
-};
-
-GameLayer.prototype.addSpark = function (spark) {
-    this._texOpaqueBatch.addChild(spark);
-};
-
-GameLayer.prototype.addBullet = function (bullet, zOrder, mode) {
-    this._texOpaqueBatch.addChild(bullet, zOrder, mode);
-};

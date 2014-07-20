@@ -1,5 +1,5 @@
-var Level = {
-    LevelMAX:4,
+var LEVEL = {
+    LEVELMAX:4,
     LEVEL1:[
         {
            

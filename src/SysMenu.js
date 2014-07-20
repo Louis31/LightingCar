@@ -19,7 +19,8 @@ var SysMenu = cc.Layer.extend({
 
             var logo = cc.Sprite.create(res.logo_png);
             logo.setAnchorPoint(0, 0);
-            logo.setPosition(0, 250);
+			//cc.log(logo.getContentSize().width);
+				logo.setPosition((winSize.width -logo.getContentSize().width)/2, 250);
             this.addChild(logo, 10, 1);
 
             var newGameNormal = cc.Sprite.create(res.menu_png, cc.rect(0, 0, 126, 33));

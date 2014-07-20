@@ -1,12 +1,11 @@
- var shipFrame=shipFrame|| ["sc_30.png","sc_27.png","sc_32.png","sc_34.pn"];
+ var shipFrame=shipFrame|| ["sc_30.png","sc_27.png","sc_32.png","sc_34.png"];
 
 var Ship = cc.Sprite.extend({
-
     speed:220,
     throwBombing:false,
     canBeAttack:true,
     isThrowingBomb:false,
-    zOrder:3000,
+    zOrder:MW.SPRITORDER,
 	level:0,
 	HP:1,
     appearPosition:cc.p(160, 60),
@@ -20,8 +19,6 @@ var Ship = cc.Sprite.extend({
 
     ctor:function () {
         this._super();
-
-			
         this.initWithSpriteFrameName(shipFrame[0]);
         this.setTag(this.zOrder);
         this.setPosition(this.appearPosition);
@@ -29,9 +26,12 @@ var Ship = cc.Sprite.extend({
       
 	  
 	  
-	  for(var i =0 , b = shipFrame.length ; i < b ; i++)
+	  for(var i =0 , b = shipFrame.length ; i < b ; i++){
 	   this.frame[i]= cc.SpriteFrameCache.getInstance().getSpriteFrame(shipFrame[i]);
        
+}	   
+		
+		this.setDisplayFrame(  this.frame[0]);
 
 		/**var animFrames = [];
         animFrames.push(frame0);
@@ -43,13 +43,13 @@ var Ship = cc.Sprite.extend({
 		
        //  this.animation = cc.AnimationCache.getInstance();
 		this.scheduleUpdate();
-        this.schedule(this.shoot, 1 / 6);
+        //this.schedule(this.shoot, 1 / 6);
 
-        this.initBornSprite();
+        //this.initBornSprite();
         //this.born();
     },
     update:function (dt) {
-	debugger      // Keys are only enabled on the browser
+    // Keys are only enabled on the browser
         if (this.action&&sys.platform == 'browser') {
             var pos = this.getPosition();
             if ((MW.KEYS[cc.KEY.w] || MW.KEYS[cc.KEY.up]) && pos.y <= winSize.height) {
@@ -85,7 +85,7 @@ var Ship = cc.Sprite.extend({
         var p = this.getPosition();
         var cs = this.getContentSize();
 		*/
-       this.updateByLevel(3);
+      // this.updateByLevel(3);
  /**  var a = Bullet.getOrCreateBullet(this.bulletSpeed, "W1.png", MW.ENEMY_ATTACK_MODE.NORMAL, 3000, MW.UNIT_TAG.PLAYER_BULLET);
         a.setPosition(p.x + offset, p.y + 3 + cs.height * 0.3);
 
@@ -94,6 +94,8 @@ var Ship = cc.Sprite.extend({
 		*/	
     },
 	updateByLevel:function(level){
+	 level  = level ? (level  >  this.frame.length-1  ? this.frame.length -1 : level):0 ;
+	  this.setDisplayFrame(this.frame[level]);
 	//this.setDisplayFrameWithAnimationName(this.animation,level);
 	
 	},
@@ -121,18 +123,13 @@ var Ship = cc.Sprite.extend({
             cc.AudioEngine.getInstance().playEffect(res.shipDestroyEffect_mp3);
         }
     },
-    hurt:function () {
-        if (this.canBeAttack) {
-            this._hurtColorLife = 2;
-            this.HP--;
-        }
-    },
+  
     collideRect:function (p) {
         var a = this.getContentSize();
         return cc.rect(p.x - a.width / 2, p.y - a.height / 2, a.width, a.height / 2);
     },
     initBornSprite:function () {
-        this.bornSprite = cc.Sprite.createWithSpriteFrameName("ship03.png");
+        this.bornSprite = cc.Sprite.createWithSpriteFrameName("sc_40.png");
         this.bornSprite.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
         this.bornSprite.setPosition(this.getContentSize().width / 2, 12);
         this.bornSprite.setVisible(false);
