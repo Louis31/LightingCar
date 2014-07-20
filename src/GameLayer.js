@@ -1,19 +1,15 @@
-//
-// MoonWarriors
-//
-// Handles the Game Logic
-//
 
+
+  
 STATE_PLAYING = 0;
 STATE_GAMEOVER = 1;
 MAX_CONTAINT_WIDTH = 40;
 MAX_CONTAINT_HEIGHT = 40;
-
 var g_sharedGameLayer;
-
 var GameLayer = cc.LayerColor.extend({
     _time:null,
     _ship:null,
+	_shipLevel:null,
     _backSky:null,
     _backSkyHeight:0,
     _backSkyRe:null,
@@ -27,17 +23,21 @@ var GameLayer = cc.LayerColor.extend({
     _beginPos:cc.p(0, 0),
     _state:STATE_PLAYING,
     _explosions:null,
-    _texOpaqueBatch:null,
-    _texTransparentBatch:null,
+    _texBatch:null,
+    _spriteBatch:null,
+	_lableLevel:0,
+	cacheFrame:null,
+	_emenyBatch:null,
 
     init:function () {
         var bRet = false;
         if (this._super()) {
+			winSize = cc.Director.getInstance().getWinSize();
 		
 		/**背景颜色*/
 			this.setColor(cc.c4b(192,192,192,255));
-            cc.SpriteFrameCache.getInstance().addSpriteFrames(res.textureOpaquePack_plist);
-            cc.SpriteFrameCache.getInstance().addSpriteFrames(res.b01_plist);
+          //  cc.SpriteFrameCache.getInstance().addSpriteFrames(res.textureOpaquePack_plist);
+          cc.SpriteFrameCache.getInstance().addSpriteFrames(res.b01_plist);
 	
             // reset global values
             MW.CONTAINER.ENEMIES = [];
@@ -50,25 +50,27 @@ var GameLayer = cc.LayerColor.extend({
             MW.CONTAINER.BACKTILEMAPS = [];
             MW.ACTIVE_ENEMIES = 0;
 
-            MW.SCORE = 0;
-            MW.LIFE = 1;
+            MW.SCORE = 10000000000;
+            MW.LEVEL = 0;
             this._state = STATE_PLAYING;
 
-            // OpaqueBatch
-            var texOpaque = cc.TextureCache.getInstance().addImage(res.textureOpaquePack_png);
-            this._texOpaqueBatch = cc.SpriteBatchNode.createWithTexture(texOpaque);
-            this._texOpaqueBatch.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
-            this.addChild(this._texOpaqueBatch);
+            // _texBatch
+            var texOpaque = cc.TextureCache.getInstance();
+            this._texBatch = cc.SpriteBatchNode.createWithTexture(texOpaque);
+            this._texBatch.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
+            this.addChild(this._texBatch);
 
-            // TransparentBatch
-            var texTransparent = cc.TextureCache.getInstance().addImage(res.textureTransparentPack_png);
-            this._texTransparentBatch = cc.SpriteBatchNode.createWithTexture(texTransparent);
-            this.addChild(this._texTransparentBatch);
+            // _spriteBatch
+            var texTransparent = cc.TextureCache.getInstance();
+            this._spriteBatch = cc.SpriteBatchNode.createWithTexture(texTransparent);
+            this.addChild(this._spriteBatch);
 
-              winSize = cc.Director.getInstance().getWinSize();
-			
+              var enTransparent = cc.TextureCache.getInstance();
+			  
+			  this._emenyBatch= cc.SpriteBatchNode.createWithTexture(enTransparent);
+			 this.addChild(this._emenyBatch);
 				 
-            this._levelManager = new LevelManager(this);
+            //this._levelManager = new LevelManager(this);
 
             this.screenRect = cc.rect(0, 0, winSize.width, winSize.height + 10);
 
@@ -76,35 +78,27 @@ var GameLayer = cc.LayerColor.extend({
             this.lbScore = cc.LabelBMFont.create("0", res.arial_14_fnt);
             this.lbScore.setAnchorPoint(1, 0);
             this.lbScore.setAlignment(cc.TEXT_ALIGNMENT_RIGHT);
-            this.addChild(this.lbScore, 1000);
+           
+			
             this.lbScore.setPosition(winSize.width - 5, winSize.height - 30);
-
+			this.addChild(this.lbScore, 1000);
             // car level
-            var life = cc.Sprite.createWithSpriteFrameName("sc_30.png");
-            life.setScale(0.1);
-            life.setPosition(30, 460);
-            this._texTransparentBatch.addChild(life, 1, 5);
+			this._shipLevel = new Ship();
+			this._shipLevel.action =false;
+            this._shipLevel.setScale(0.1);
+            this._shipLevel.setPosition(30, 460);
+            this._spriteBatch.addChild(this._shipLevel, 1, 5);
 
-            // ship level count
-            this._lbLife = cc.LabelTTF.create("0", "Arial", 20);
-            this._lbLife.setPosition(60, 463);
-            this._lbLife.setColor(cc.c3b(255, 0, 0));
-            this.addChild(this._lbLife, 1000);
-
-            // ship
+            // ship level 
+            this._lableLevel = cc.LabelTTF.create("0", "Arial", 20);
+            this._lableLevel.setPosition(60, 463);
+            this._lableLevel.setColor(cc.c3b(255, 0, 0));
+            //this._lableLevel(this._lbLife, 1000);
+			this.addChild(this._lableLevel, 1000);
             this._ship = new Ship();
-            this._texTransparentBatch.addChild(this._ship, this._ship.zOrder, MW.UNIT_TAG.PLAYER);
+            this._spriteBatch.addChild(this._ship, this._ship.zOrder, MW.UNIT_TAG.PLAYER);
 
-            // explosion batch node
-            cc.SpriteFrameCache.getInstance().addSpriteFrames(res.explosion_plist);
-            var explosionTexture = cc.TextureCache.getInstance().addImage(res.explosion_png);
-            this._explosions = cc.SpriteBatchNode.createWithTexture(explosionTexture);
-            this._explosions.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
-            this.addChild(this._explosions);
-            Explosion.sharedExplosion();
-
-            // accept touch now!
-
+          
             if (sys.capabilities.hasOwnProperty('keyboard'))
                 this.setKeyboardEnabled(true);
 
@@ -117,8 +111,7 @@ var GameLayer = cc.LayerColor.extend({
                 this.setTouchEnabled(true);
 
             // schedule
-            this.scheduleUpdate();
-            this.schedule(this.scoreCounter, 1);
+
 
             if (MW.SOUND) {
                 cc.AudioEngine.getInstance().playMusic(res.bgMusic_mp3, true);
@@ -129,14 +122,17 @@ var GameLayer = cc.LayerColor.extend({
             g_sharedGameLayer = this;
 
             //pre set
-            Bullet.preSet();
+          //  Bullet.preSet();
             Enemy.preSet();
-            HitEffect.preSet();
-            SparkEffect.preSet();
-            Explosion.preSet();
+           // HitEffect.preSet();
+            //SparkEffect.preSet();
+            //Explosion.preSet();
             //BackSky.preSet();
-            BackTileMap.preSet();
+          //  BackTileMap.preSet();
+			//cc.log(MW.SCORE);
 			
+     this.scheduleUpdate();
+            this.schedule(this.scoreCounter, 100);
 
             this.initBackground();
         }
@@ -146,7 +142,8 @@ var GameLayer = cc.LayerColor.extend({
     scoreCounter:function () {
         if (this._state == STATE_PLAYING) {
             this._time++;
-            this._levelManager.loadLevelResource(this._time);
+			
+            //this._levelManager.loadLevelResource(this._time);
         }
     },
 
@@ -177,14 +174,18 @@ var GameLayer = cc.LayerColor.extend({
     },
 
     update:function (dt) {
+
         if (this._state == STATE_PLAYING) {
-            this.checkIsCollide();
-            this.removeInactiveUnit(dt);
-            this.checkIsReborn();
+           // this.checkIsCollide();
+          this.updateEmeny();
             this.updateUI();
            // this._movingBackground(dt);
         }
     },
+	updateEmeny:function(){
+	
+	//Enemy.getOrCreateEnemy(1);
+	},
     checkIsCollide:function () {
         var selChild, bulletChild;
         // check collide
@@ -248,10 +249,13 @@ var GameLayer = cc.LayerColor.extend({
         }
     },
     updateUI:function () {
-        if (this._tmpScore < MW.SCORE) {
-            this._tmpScore += 1;
-        }
-        this._lbLife.setString(MW.LIFE + '');
+	
+     this._tmpScore +=10;
+	 
+	if(this._tmpScore%1000===0){
+	MW.LEVEL +=1;
+	}
+        this._lableLevel.setString(MW.LEVEL + '');
         this.lbScore.setString("" + this._tmpScore);
     },
     collide:function (a, b) {
@@ -336,7 +340,7 @@ GameLayer.scene = function () {
 };
 
 GameLayer.prototype.addEnemy = function (enemy, z, tag) {
-    this._texTransparentBatch.addChild(enemy, z, tag);
+    this._emenyBatch.addChild(enemy, z, tag);
 };
 
 GameLayer.prototype.addExplosions = function (explosion) {

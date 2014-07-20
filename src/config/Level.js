@@ -1,50 +1,76 @@
-var Level1 = {
-    enemyMax:6,
-    enemies:[
+var Level = {
+    LevelMAX:4,
+    LEVEL1:[
         {
-            ShowType:"Repeate",
-            ShowTime:"00:02",
-            Types:[0,1,2]
+           
+    
+            Types:[0,1,2,2],
+			speed:[20,25]
         },
         {
-            ShowType:"Repeate",
-            ShowTime:"00:05",
-            Types:[3,4,5]
+           
+           
+            Types:[2,1,3,4],
+			speed:[10,20]
         }
-        /*{
-            ShowType:"Repeate",
-            ShowTime:"00:08",
-            Types:[0,4,3,5]
+       
+    ],
+	
+	    LEVEL2:[
+        {
+            Types:[5,7,1,3],
+			speed:[10,20]
         },
         {
-            ShowType:"Once",
-            ShowTime:"00:6",
-            Types:[0,2,4,3]
+           Types:[5,7,1,3],
+			speed:[10,20]
+        },
+		 {
+            Types:[5,7,1,3],
+			speed:[10,20]
+        },
+		 {
+            Types:[5,7,1,3],
+			speed:[10,20]
+        }
+       
+    ],
+	    LEVEL3:[
+        {
+            Types:[5,7,1,3],
+			speed:[10,20]
         },
         {
-            ShowType:"Once",
-            ShowTime:"00:16",
-            Types:[0,2,5,4,3]
+           Types:[5,7,1,3],
+			speed:[10,20]
+        },
+		 {
+            Types:[5,7,1,3],
+			speed:[10,20]
+        },
+		 {
+            Types:[5,7,1,3],
+			speed:[10,20]
+        }
+       
+    ],
+	    LEVEL4:[
+        {
+            Types:[5,7,1,3],
+			speed:[10,20]
         },
         {
-            ShowType:"Once",
-            ShowTime:"00:25",
-            Types:[0,3,5,4,3]
+           Types:[5,7,1,3],
+			speed:[10,20]
         },
-        {
-            ShowType:"Once",
-            ShowTime:"00:35",
-            Types:[4,5,3,1,3]
+		 {
+            Types:[5,7,1,3],
+			speed:[10,20]
         },
-        {
-            ShowType:"Once",
-            ShowTime:"00:50",
-            Types:[0,3,2,1,0,3]
-        },
-        {
-            ShowType:"Once",
-            ShowTime:"01:15",
-            Types:[4,5,2,1,0]
-        }*/
+		 {
+            Types:[5,7,1,3],
+			speed:[10,20]
+        }
+       
     ]
 };

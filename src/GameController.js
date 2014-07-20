@@ -1,6 +1,3 @@
-
-
-
 MW.GameController = cc.Class.extend({
     _curScene:null,
     _gameState:MW.GAME_STATE.HOME,

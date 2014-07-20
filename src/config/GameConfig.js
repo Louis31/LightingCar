@@ -1,11 +1,11 @@
 
-MW.About="3+1 workStudio 工作室出品 \n 主程：曾铭（Louis zeng） \n 主程：黄浩（Mr.Yellow） \n 主设：高守恒"
+MW.About="3+1 WorkStudio 工作室出品 \n 主程：曾铭（Louis zeng） \n 主程：黄浩（Mr.Yellow） \n 主设：高守恒"
 MW.GAME_STATE = {
     HOME:0,
     PLAY:1,
     OVER:2
 };
-
+ MW.CONTAINER={};
 //keys
 MW.KEYS = [];
 
@@ -13,17 +13,17 @@ MW.KEYS = [];
 MW.LEVEL = {
     STAGE1:1,
     STAGE2:2,
-    STAGE3:3
+    STAGE3:3,
+	  STAGE4:4
 };
-
 //life
 MW.LIFE = 4;
 
 //score
-MW.SCORE = 0;
+MW.SCORE=10000;
 
 //sound
-MW.SOUND = true;
+MW.SOUND = false;
 
 //enemy move type
 MW.ENEMY_MOVE_TYPE = {

@@ -1,48 +1,56 @@
+ var shipFrame=shipFrame|| ["sc_30.png","sc_27.png","sc_32.png","sc_34.pn"];
+
 var Ship = cc.Sprite.extend({
+
     speed:220,
-    bulletSpeed:MW.BULLET_SPEED.SHIP,
-    HP:5,
-    bulletTypeValue:1,
-    bulletPowerValue:1,
     throwBombing:false,
     canBeAttack:true,
     isThrowingBomb:false,
     zOrder:3000,
-    maxBulletPowerValue:4,
+	level:0,
+	HP:1,
     appearPosition:cc.p(160, 60),
     _hurtColorLife:0,
     active:true,
     bornSprite:null,
+     animation :null,
+	 frame:[],
+	 aerated:null,
+	 action:true,
+
     ctor:function () {
         this._super();
 
-        //init life
-        this.initWithSpriteFrameName("sc_30.png");
+			
+        this.initWithSpriteFrameName(shipFrame[0]);
         this.setTag(this.zOrder);
         this.setPosition(this.appearPosition);
-this.setScale(0.2);
-        // set frame
-        var frame0 = cc.SpriteFrameCache.getInstance().getSpriteFrame("sc_30.png");
-        var frame1 = cc.SpriteFrameCache.getInstance().getSpriteFrame("sc_27.png");
-   var frame1 = cc.SpriteFrameCache.getInstance().getSpriteFrame("sc_32.png");
-      var frame1 = cc.SpriteFrameCache.getInstance().getSpriteFrame("sc_34.png");
+		this.setScale(0.2);
+      
+	  
+	  
+	  for(var i =0 , b = shipFrame.length ; i < b ; i++)
+	   this.frame[i]= cc.SpriteFrameCache.getInstance().getSpriteFrame(shipFrame[i]);
+       
 
-        var animFrames = [];
+		/**var animFrames = [];
         animFrames.push(frame0);
         animFrames.push(frame1);
-
+		animFrames.push(frame3);
+        animFrames.push(frame3);
+		*/
         // ship animate
-        var animation = cc.Animation.create(animFrames, 0.1);
-        var animate = cc.Animate.create(animation);
-        this.runAction(cc.RepeatForever.create(animate));
+		
+       //  this.animation = cc.AnimationCache.getInstance();
+		this.scheduleUpdate();
         this.schedule(this.shoot, 1 / 6);
 
         this.initBornSprite();
-        this.born();
+        //this.born();
     },
     update:function (dt) {
-        // Keys are only enabled on the browser
-        if (sys.platform == 'browser') {
+	debugger      // Keys are only enabled on the browser
+        if (this.action&&sys.platform == 'browser') {
             var pos = this.getPosition();
             if ((MW.KEYS[cc.KEY.w] || MW.KEYS[cc.KEY.up]) && pos.y <= winSize.height) {
                 pos.y += dt * this.speed;
@@ -73,10 +81,11 @@ this.setScale(0.2);
     },
     shoot:function (dt) {
         //this.shootEffect();
-        var offset = 13;
+     /**   var offset = 13;
         var p = this.getPosition();
         var cs = this.getContentSize();
-      
+		*/
+       this.updateByLevel(3);
  /**  var a = Bullet.getOrCreateBullet(this.bulletSpeed, "W1.png", MW.ENEMY_ATTACK_MODE.NORMAL, 3000, MW.UNIT_TAG.PLAYER_BULLET);
         a.setPosition(p.x + offset, p.y + 3 + cs.height * 0.3);
 
@@ -84,6 +93,24 @@ this.setScale(0.2);
         b.setPosition(p.x - offset, p.y + 3 + cs.height * 0.3);
 		*/	
     },
+	updateByLevel:function(level){
+	//this.setDisplayFrameWithAnimationName(this.animation,level);
+	
+	},
+	
+	addAerated:function(level){
+	 switch  (level){
+	  case 0:
+	  case 1:
+	  break;
+	  case 3:
+	   this.getPosition()
+	  break;
+	  case 4:
+	  break;
+	 
+	 }
+	},
     destroy:function () {
         MW.LIFE--;
 
@@ -110,12 +137,12 @@ this.setScale(0.2);
         this.bornSprite.setPosition(this.getContentSize().width / 2, 12);
         this.bornSprite.setVisible(false);
         this.addChild(this.bornSprite, 3000, 99999);
-    },
-    born:function () {
+    }
+   /** born:function () {
         //revive effect
-        this.canBeAttack = false;
-        this.bornSprite.setScale(8);
-        this.bornSprite.runAction(cc.ScaleTo.create(0.5, 1, 1));
+     //   this.canBeAttack = false;
+       // this.bornSprite.setScale(8);
+        //this.bornSprite.runAction(cc.ScaleTo.create(0.5, 1, 1));
         this.bornSprite.setVisible(true);
         var blinks = cc.Blink.create(3, 9);
         var makeBeAttack = cc.CallFunc.create(function (t) {
@@ -125,8 +152,8 @@ this.setScale(0.2);
         }.bind(this));
         this.runAction(cc.Sequence.create(cc.DelayTime.create(0.5), blinks, makeBeAttack));
 
-        this.HP = 5;
+      //  this.HP = 5;
         this._hurtColorLife = 0;
         this.active = true;
-    }
+    }*/ 
 });
